@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.management.app.dto.UserInDto;
 import com.management.app.model.User;
 import com.management.app.service.UserIService;
 
@@ -23,13 +24,13 @@ public class UserController {
 	UserIService userIService;
 	
 	@PostMapping("save")
-	public User save(@RequestBody User us) {
+	public String save(@RequestBody UserInDto us) {
 		return userIService.save(us);
 	}
 	
 	@PutMapping("update")
-	public User update(@RequestBody User us) {
-		return userIService.save(us);
+	public String update(@RequestBody UserInDto us) {
+		return userIService.update(us);
 	}
 	
 	@GetMapping("get-all")
