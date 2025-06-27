@@ -47,4 +47,16 @@ public class UserController {
 	public void delete(@PathVariable("id") Long id) {
 		userIService.delete(id);
 	}
+	
+	@GetMapping("verification/{email}/{otp}")
+	String otpVerification(@PathVariable("email") String email, @PathVariable("otp") int otp) {
+		return userIService.otpVerification(email, otp);
+	}
+	
+	
+	@PostMapping("otp/{email}")
+	String otpGenerator(@PathVariable("email") String email){
+		return userIService.otpGenerator(email);
+	}
+	
 }

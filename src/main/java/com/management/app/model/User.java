@@ -9,11 +9,13 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @Table(name = "user_table")
 @AllArgsConstructor
+@NoArgsConstructor
 @SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
 public class User {
 
@@ -28,6 +30,8 @@ public class User {
 	private String password;
 	
 	private String role;
+	
+	private String gender;
 	
 	private Integer otp;
 	

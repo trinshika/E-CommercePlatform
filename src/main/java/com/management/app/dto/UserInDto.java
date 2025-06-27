@@ -13,6 +13,8 @@ public class UserInDto {
 	
 	private String password;
 	
+	private String gender;
+	
 	private String role;
 
 }

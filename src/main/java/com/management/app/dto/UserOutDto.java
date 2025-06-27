@@ -12,5 +12,7 @@ public class UserOutDto {
 	
 	private String role;
 	
+	private String gender;
+	
 	private boolean verified;
 }
