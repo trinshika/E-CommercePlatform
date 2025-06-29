@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.management.app.dto.UserInDto;
+import com.management.app.exception.UserAlreadyExistException;
+import com.management.app.exception.UserNotFoundException;
+import com.management.app.mapper.UserMapper;
 import com.management.app.model.User;
 import com.management.app.repo.UserIRepo;
 import com.management.app.util.EmailIUtil;
@@ -27,23 +30,20 @@ public class UserServiceImpl implements UserIService {
 	
 	@Autowired
 	EmailTemplate emailTemplate;
+	
+	@Autowired
+	UserMapper userMapper;
 
 	public String save(UserInDto us) {
 
-		if(userIRepo.findByEmail(us.getEmail()).size() != 0) 
-			return "User already exist";
+		if(!userIRepo.findByEmail(us.getEmail()).isEmpty()) 
+			throw new UserAlreadyExistException("User already exist with email id : " + us.getEmail());
 
+		User u = userMapper.UserInDtoToUserEntity(us);
+		
 		int otp = og.sixDigitOtp();
-
-		User u = new User(us.getId(), 
-				us.getName(), 
-				us.getEmail(), 
-				us.getPassword(), 
-				us.getRole(),
-				us.getGender(),
-				otp, 
-				false);
-
+		u.setOtp(otp);
+		
 		userIRepo.save(u);
 		eu.sendMail(us.getEmail(), "Account Creation Confirmation & OTP Verification", emailTemplate.getMailBodyAccountCreation(us.getGender(), us.getName(), otp, us.getEmail()));
 		return "User saved succesfully";
@@ -106,14 +106,24 @@ public class UserServiceImpl implements UserIService {
 	public String otpGenerator(String email) {
 		List<User> user = userIRepo.findByEmail(email);
 		if(!user.isEmpty()) {
-			int otp = og.sixDigitOtp();
 			User us = user.get(0);
-			us.setOtp(otp);
-			userIRepo.save(us);
-			eu.sendMail(email, "OTP Regenerated – Complete Your Verification", emailTemplate.getMailBodyOtpRegenerated(us.getGender(), us.getName(), us.getOtp(), us.getEmail()));
-			return "OTP sent via registered email";
+			
+			if(us.isVerified()) {
+				return "User is already verified";
+			}else {
+				int otp = og.sixDigitOtp();
+				
+//				us.setOtp(otp);
+//				userIRepo.save(us);
+				
+				userIRepo.updateOtp(otp, email);
+				
+				eu.sendMail(email, "OTP Regenerated – Complete Your Verification", emailTemplate.getMailBodyOtpRegenerated(us.getGender(), us.getName(), otp, email));
+				return "OTP sent via registered email";		
+			}
+			
 		}else {
-			return "User not found";
+			throw new UserNotFoundException("User Not found belongs to : " + email);
 		}
 	}
 

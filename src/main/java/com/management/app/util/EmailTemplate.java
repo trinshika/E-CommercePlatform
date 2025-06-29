@@ -10,7 +10,7 @@ public class EmailTemplate {
 	private String baseurl;
 
 	private String getTitleAndName(String gender, String name) {
-		return "male".equals(gender) ? "Mr. " : "Mrs. " + name;
+		return gender.equalsIgnoreCase("male") ? "Mr. " : "Mrs. " + name;
 	}
 
 	public String getMailBodyAccountCreation(String gender, String name, int otp, String email) {
@@ -110,8 +110,6 @@ public class EmailTemplate {
 	
 	public String getMailBodyOtpRegenerated(String gender, String name, int otp, String email) {
 
-	    String title = "male".equalsIgnoreCase(gender) ? "Mr. " : "Mrs. ";
-
 	    String verificationLink =  baseurl + "/user/verification/" + email + "/" + otp;
 
 	    return "<!DOCTYPE html>"
@@ -131,7 +129,7 @@ public class EmailTemplate {
 	        + "<div class='container'>"
 	        + "  <div class='header'>OTP Regenerated</div>"
 	        + "  <div class='content'>"
-	        + "    <p>Dear " + title + name + ",</p>"
+	        + "    <p>Dear " +  getTitleAndName(gender, name) + ",</p>"
 	        + "    <p>A new OTP has been generated for your account verification as per your request.</p>"
 	        + "    <p>Please use the following OTP to complete your verification:</p>"
 	        + "    <div class='otp'>" + otp + "</div>"
