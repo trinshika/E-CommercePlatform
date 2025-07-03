@@ -35,6 +35,7 @@ public class User {
 	
 	private Integer otp;
 	
-	private boolean verified;
+	private Boolean verified;
+	
 	
 }

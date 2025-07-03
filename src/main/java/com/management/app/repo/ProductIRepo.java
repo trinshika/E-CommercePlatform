@@ -9,3 +9,4 @@ import com.management.app.model.Product;
 public interface ProductIRepo extends JpaRepository<Product, Long>{
 
 }
+//

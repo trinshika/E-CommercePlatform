@@ -23,11 +23,10 @@ public class UserMapper {
 	}
 	
 	
-	
-	
 //	user -> UserOutDto
 	public UserOutDto UserToUserOutDto(User user){
 		return new UserOutDto();
 	}
-	
+
+
 }

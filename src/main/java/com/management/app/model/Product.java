@@ -6,11 +6,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @Table(name = "Product")
+@AllArgsConstructor
+@NoArgsConstructor
 @SequenceGenerator(name = "product_seq", sequenceName = "product_seq", allocationSize = 1)
 public class Product {
 
@@ -22,9 +26,9 @@ public class Product {
 	
 	private String description;
 	
-	private double price;
+	private Double price;
 	
-	private int quantity;
+	private Integer quantity;
 	
 	
 }

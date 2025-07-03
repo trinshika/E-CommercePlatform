@@ -1,19 +1,27 @@
 package com.management.app.util;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.management.app.ai.GeminiClient;
 
 @Component
 public class EmailTemplate {
 
 	@Value("${app.baseurl}")
 	private String baseurl;
+	
+	@Autowired
+	GeminiClient geminiClient;
 
 	private String getTitleAndName(String gender, String name) {
 		return gender.equalsIgnoreCase("male") ? "Mr. " : "Mrs. " + name;
 	}
 
-	public String getMailBodyAccountCreation(String gender, String name, int otp, String email) {
+	public String getMailBodyAccountCreation(String gender, String name, int otp, String email) throws JsonMappingException, JsonProcessingException {
 
 		String verificationLink = baseurl + "/user/verification/" + email + "/" + otp;
 		System.out.println(verificationLink);
@@ -35,6 +43,7 @@ public class EmailTemplate {
 		+ "  <div class='header'>Dear " + getTitleAndName(gender, name) + ",</div>"
 		+ "  <div class='content'>"
 		+ "    <p>Your account has been created successfully.</p>"
+		+ "    <h3>"+geminiClient.getQuoteForMail()+"</h3>"
 		+ "    <p>To verify your account, please use the following OTP:</p>"
 		+ "    <div class='otp'>" + otp + "</div>"
 		+ "    <p>Or click the button below to verify directly:</p>"
